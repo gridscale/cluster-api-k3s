@@ -128,7 +128,7 @@ func New(clusterName, endpoint string, clientCACert *x509.Certificate, clientCAK
 }
 
 // CreateSecret creates the Kubeconfig secret for the given cluster.
-func CreateSecret(ctx context.Context, c client.Client, cluster *clusterv1.Cluster, proxyURL *string) error {
+func CreateSecret(ctx context.Context, c client.Client, cluster *clusterv1.Cluster) error {
 	name := util.ObjectKey(cluster)
 	return CreateSecretWithOwner(
 		ctx,
@@ -141,14 +141,13 @@ func CreateSecret(ctx context.Context, c client.Client, cluster *clusterv1.Clust
 			Name:       cluster.Name,
 			UID:        cluster.UID,
 		},
-		proxyURL,
 	)
 }
 
 // CreateSecretWithOwner creates the Kubeconfig secret for the given cluster name, namespace, endpoint, owner reference and proxy URL.
-func CreateSecretWithOwner(ctx context.Context, c client.Client, clusterName client.ObjectKey, endpoint string, owner metav1.OwnerReference, proxyURL *string) error {
+func CreateSecretWithOwner(ctx context.Context, c client.Client, clusterName client.ObjectKey, endpoint string, owner metav1.OwnerReference) error {
 	server := fmt.Sprintf("https://%s", endpoint)
-	out, err := generateKubeconfig(ctx, c, clusterName, server, proxyURL)
+	out, err := generateKubeconfig(ctx, c, clusterName, server, nil)
 	if err != nil {
 		return err
 	}

@@ -648,7 +648,6 @@ func (r *KThreesControlPlaneReconciler) reconcileKubeconfig(ctx context.Context,
 			clusterName,
 			endpoint.String(),
 			controllerOwnerRef,
-			nil,
 		)
 		if errors.Is(createErr, kubeconfig.ErrDependentCertificateNotFound) {
 			return ctrl.Result{RequeueAfter: dependentCertRequeueAfter}, nil
